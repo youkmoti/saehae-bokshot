@@ -224,6 +224,36 @@
 .postcardEditor:focus-within .postcardEditCue{opacity:0}
 .postcardEditor #giftMessage{cursor:text!important;border:2px dashed #b68c55aa!important;border-radius:10px!important}
 .postcardEditor #giftMessage:focus{border:2px solid #b68c55!important}
+
+/* v61: unified start/result rhythm; no positional nudges or accumulated margins. */
+#overlay,#overlay.result-balanced{
+ flex-direction:column!important;align-items:center!important;
+ justify-content:flex-start!important;gap:0!important;
+ padding:clamp(20px,4.5vh,38px) 18px!important;
+ overflow-y:auto!important;overscroll-behavior:contain;
+}
+#overlay > *,#overlay.result-balanced > *{position:static!important;top:auto!important;transform:none!important;flex-shrink:0}
+#overlay .overline{margin:0 0 12px!important}
+#overlay .startEmblem{margin:0 0 14px!important}
+#overlay h2{margin:0 0 17px!important}
+#overlay #desc,#overlay.result-balanced #desc{margin:0 0 clamp(28px,5.5vh,52px)!important;line-height:1.7!important}
+#overlay #start{margin:0 0 12px!important;width:min(100%,310px)!important;min-height:52px}
+#overlay #guideLink{margin:0!important;width:min(100%,310px)!important;min-height:46px}
+#overlay .shareActions{margin:16px 0 0!important;max-width:310px!important;width:100%!important;gap:12px!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+#overlay .shareActions[hidden],#overlay .shareNote[hidden]{display:none!important}
+#overlay .shareNote{margin:10px 0 0!important}
+/* Share actions add height to the result screen; preserve a consistent top and bottom gutter. */
+#overlay::before,#overlay::after{content:"";display:block;flex:1 0 0;min-height:0;width:1px}
+@media(max-height:690px){
+ #overlay,#overlay.result-balanced{padding:15px 14px!important}
+ #overlay .overline{margin-bottom:7px!important}
+ #overlay .startEmblem{margin-bottom:8px!important}
+ #overlay h2{margin-bottom:10px!important}
+ #overlay #desc,#overlay.result-balanced #desc{margin-bottom:22px!important}
+ #overlay #start{min-height:44px;margin-bottom:8px!important}
+ #overlay #guideLink{min-height:40px}
+ #overlay .shareActions{margin-top:9px!important}
+}
 </style>
 <style id="v52-style">
 /* Language chooser: fixed overlay, independent of game coordinate scaling */
