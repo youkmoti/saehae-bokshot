@@ -218,6 +218,12 @@
 #overlay .shareActions[hidden]{display:none}
 #overlay .shareNote{font-size:11px;color:#f3dcae;min-height:16px}
 #overlay .shareNote[hidden]{display:none}
+
+/* v59: visible edit affordance; the cue never blocks touch */
+.postcardEditor .postcardEditCue{position:absolute;z-index:3;left:10%;right:10%;top:54%;text-align:center;color:#694726;background:#fff2c9ed;border:1px dashed #a97838;border-radius:999px;padding:5px 4px;font-weight:850;font-size:clamp(11px,3.2vw,15px);pointer-events:none;box-shadow:0 2px 8px #36251933}
+.postcardEditor:focus-within .postcardEditCue{opacity:0}
+.postcardEditor #giftMessage{cursor:text!important;border:2px dashed #b68c55aa!important;border-radius:10px!important}
+.postcardEditor #giftMessage:focus{border:2px solid #b68c55!important}
 </style>
 <style id="v52-style">
 /* Language chooser: fixed overlay, independent of game coordinate scaling */
@@ -266,6 +272,25 @@ html[data-lang="fr"] .sceneHeader,html[data-lang="es"] .sceneHeader{font-size:cl
 #giftPreview{display:block;width:min(100%,190px);height:auto;aspect-ratio:3/4;margin:0 auto 14px;border-radius:10px;box-shadow:0 6px 18px #0006}
 .giftButtons{display:grid;grid-template-columns:1fr 1fr;gap:9px}.giftButtons button{border:1px solid #d9ba83;border-radius:13px;background:#ffdda0;color:#3c302e;min-height:45px;font-weight:850;font-size:13px}.giftButtons button+button{background:#2d344c;color:#ffdfa6}
 #giftStatus{min-height:17px;text-align:center;font-size:12px;margin-top:8px;color:#ffe4a9}
+
+/* v56: readable gift greeting and enlarged live card preview */
+#giftMessage{font-size:18px!important;line-height:1.6!important;min-height:115px!important}
+#giftPreview{width:min(100%,265px)!important;margin-bottom:18px!important}
+.giftPanel p{font-size:14px!important;line-height:1.55!important}
+.giftPresets button{font-size:13px!important}
+</style><style>
+/* v57: edit directly on postcard, with a single scrollable modal */
+#giftModal{padding:8px;overscroll-behavior:contain;touch-action:pan-y}
+#giftModal .giftPanel{max-height:calc(100dvh - 16px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:14px}
+.postcardEditor{position:relative;width:min(100%,310px);margin:4px auto 0;aspect-ratio:3/4;overflow:hidden;border-radius:13px;box-shadow:0 7px 24px #0008}
+#giftPreview{width:100%!important;height:100%!important;max-width:none!important;margin:0!important;border-radius:0!important;box-shadow:none!important;aspect-ratio:3/4;pointer-events:none}
+.postcardEditor #giftMessage{position:absolute;left:6.35%;top:55.4%;width:87.3%!important;height:26%!important;min-height:0!important;max-height:none!important;resize:none!important;border:1px solid #f5dba47a!important;border-radius:9px!important;background:#18283a8a!important;color:#fff6e3!important;font-weight:750!important;font-size:clamp(13px,3.5vw,18px)!important;line-height:1.45!important;text-align:center;padding:10px 7px!important;overflow-y:auto;touch-action:pan-y;outline-offset:2px}
+.postcardEditor #giftMessage:focus{outline:2px solid #ffe1a0}
+#giftCount{margin:5px 0 10px}
+.giftPresets{margin-bottom:8px}
+/* v58 postcard editable lettering and parchment visual */
+.postcardEditor #giftMessage{top:59.5%!important;height:20%!important;font-size:clamp(19px,5.7vw,28px)!important;font-weight:800!important;line-height:1.32!important;color:#493b3a!important;background:transparent!important;border:0!important;box-shadow:none!important;text-align:center!important;padding:4px 9px!important;}
+.postcardEditor #giftMessage:focus{outline:2px dashed #ad8248!important;background:#fff6d455!important}
 </style></head><body><main><header><div class="topline"><div class="brand"><div class="eyebrow">올해의 불행을, 새해의 복으로!</div><h1>새해복샷!</h1></div><div class="toolbar"><button class="tool" id="lang" type="button" aria-label="언어 변경" title="언어 변경">KO</button><button class="tool" id="sound" aria-label="소리 켜짐" title="소리">♫</button><button class="tool" id="reset" aria-label="처음부터 다시하기" title="다시 시작">↻</button></div></div><div class="stats"><span id="hud">✨ 0　⏳ 60s</span><span id="luckFlyDock" aria-hidden="true">✦</span></div></header><div id="stage"><canvas id="game"></canvas><div id="overlay"><div class="overline">2026년의 끝에서, 2027년의 시작으로</div><div class="startEmblem">✈ <span>✦</span> 🍀</div><h2 id="title">새해복샷!</h2><p id="desc"><b>올해의 불행을, 새해의 복으로!</b><br>걱정을 접어 날리고, 복을 터뜨려 보세요.</p><button id="start">게임 시작 ✈</button><button id="guideLink" type="button">? 게임 가이드</button><div class="shareActions" id="shareActions" hidden><button id="shareCard" type="button">🖼 복 카드 저장</button><button id="shareLink" type="button">↗ 친구에게 공유</button></div><div class="shareNote" id="shareNote" hidden></div></div></div><footer></footer></main><div id="guideModal" role="dialog" aria-modal="true" aria-label="게임 가이드"><div class="guideCard"><button type="button" id="guideClose" aria-label="닫기">×</button><div class="guideEyebrow">HOW TO PLAY</div><h2>새해복샷! 가이드</h2><div class="guideScene" aria-label="세로 게임 화면에서 타깃, 종이비행기, 궤적, 착탄 링과 손가락 드래그를 보여주는 애니메이션">
  <div class="sceneHeader">드래그로 조준 → 손을 떼면 발사!</div>
  <svg class="guideSceneSvg" viewBox="0 105 300 305" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -289,7 +314,7 @@ html[data-lang="fr"] .sceneHeader,html[data-lang="es"] .sceneHeader{font-size:cl
  
  </div>
  <div class="guideItems"><div class="guideItem"><span class="guideItemIcon">🏹</span><div><b>화살</b><small>화살을 쏘면 연사가 가능해요.</small></div></div><div class="guideItem"><span class="guideItemIcon">💣</span><div><b>폭탄</b><small>폭탄을 쏘면 광역공격이 발생해요.</small></div></div></div>
- <button type="button" id="guideOk">알겠어요</button></div></div><div id="confirm"><div class="modal"><strong>처음부터 다시 시작할까요?</strong><div class="actions"><button id="no">계속하기</button><button id="yes">다시 시작</button></div></div></div><div id="languageModal" role="dialog" aria-modal="true" aria-label="언어 선택"><div class="languageCard"><div class="languageHead"><strong id="languageTitle">🌐 언어 선택 · Language</strong><button id="languageClose" type="button" aria-label="닫기">×</button></div><div class="languageGrid" id="languageGrid"></div></div></div><div id="giftModal" role="dialog" aria-modal="true" aria-label="복 카드 만들기"><div class="giftPanel"><div class="giftHead"><strong id="giftTitle">🎁 복 카드 선물하기</strong><button type="button" id="giftClose" aria-label="닫기">×</button></div><p id="giftHint">친구에게 전할 새해 인사를 골라보세요. 직접 바꿔도 좋아요.</p><div class="giftPresets" id="giftPresets"><button type="button" data-preset="0">🍀 따뜻한 응원</button><button type="button" data-preset="1">✨ 행운 선물</button><button type="button" data-preset="2">💛 짧은 인사</button></div><textarea id="giftMessage" maxlength="90" aria-label="복 카드 인사말"></textarea><div class="giftCount" id="giftCount">0 / 90</div><canvas id="giftPreview" width="900" height="1200"></canvas><div class="giftButtons"><button type="button" id="giftSave">이미지 저장</button><button type="button" id="giftSend">친구에게 보내기 ↗</button></div><div id="giftStatus" aria-live="polite"></div></div></div><script>
+ <button type="button" id="guideOk">알겠어요</button></div></div><div id="confirm"><div class="modal"><strong>처음부터 다시 시작할까요?</strong><div class="actions"><button id="no">계속하기</button><button id="yes">다시 시작</button></div></div></div><div id="languageModal" role="dialog" aria-modal="true" aria-label="언어 선택"><div class="languageCard"><div class="languageHead"><strong id="languageTitle">🌐 언어 선택 · Language</strong><button id="languageClose" type="button" aria-label="닫기">×</button></div><div class="languageGrid" id="languageGrid"></div></div></div><div id="giftModal" role="dialog" aria-modal="true" aria-label="복 카드 만들기"><div class="giftPanel"><div class="giftHead"><strong id="giftTitle">🎁 복 카드 선물하기</strong><button type="button" id="giftClose" aria-label="닫기">×</button></div><p id="giftHint">친구에게 전할 새해 인사를 골라보세요. 직접 바꿔도 좋아요.</p><div class="giftPresets" id="giftPresets"><button type="button" data-preset="0">🍀 따뜻한 응원</button><button type="button" data-preset="1">✨ 행운 선물</button><button type="button" data-preset="2">💛 짧은 인사</button></div><div class="postcardEditor"><canvas id="giftPreview" width="900" height="1200"></canvas><div class="postcardEditCue" id="postcardEditCue">✎ 눌러서 직접 작성 · 수정</div><textarea id="giftMessage" maxlength="90" aria-label="복 카드 인사말" placeholder="여기에 인사말을 써 주세요"></textarea></div><div class="giftCount" id="giftCount">0 / 90</div><div class="giftButtons"><button type="button" id="giftSave">이미지 저장</button><button type="button" id="giftSend">친구에게 보내기 ↗</button></div><div id="giftStatus" aria-live="polite"></div></div></div><script>
 (()=>{'use strict';
 const translations={
 ko:{name:'새해복샷!',eyebrow:'올해의 불행을, 새해의 복으로!',over:'2026년의 끝에서, 2027년의 시작으로',desc:'<b>올해의 불행을, 새해의 복으로!</b><br>걱정을 접어 날리고, 복을 터뜨려 보세요.',start:'게임 시작 ✈',again:'다시 날리기 ✈',guide:'? 게임 가이드',guideTitle:'새해복샷! 가이드',guideHow:'드래그로 조준 → 손을 떼면 발사!',guideAim:'드래그로 조준',guideOK:'알겠어요',arrow:'화살을 쏘면 연사가 가능해요.',bomb:'폭탄을 쏘면 광역공격이 발생해요.',result:'점의 복',changed:'개를 복으로 바꿨어요.',wish:'당신이 날려 보낸 불행만큼,<br>새해에는 더 많은 복이 찾아오길.',card:'🖼 복 카드 저장',share:'↗ 친구에게 공유',shareText:'나의 새해복샷! 점수',score:'점',saved:'복 카드가 저장됐어요!',copied:'게임 링크를 복사했어요!',shareFail:'이 브라우저에서는 링크 복사나 공유가 제한될 수 있어요.',bad:['손실','고단함','좌절','고독','실패'],good:['풍요','활력','성취','인연','성공'],arrowShort:'연사',bombShort:'폭발'},
@@ -302,7 +327,7 @@ fr:{name:'TIR PORTE-BONHEUR !',eyebrow:'Transformez vos soucis en chance !',over
 const langs=['ko','en','ja','es','fr','zh-CN'];let lang=(()=>{let v='';try{v=localStorage.getItem('bokshot_lang')||'';}catch{}return langs.includes(v)?v:(langs.includes(navigator.language)?navigator.language:(navigator.language||'').split('-')[0]==='zh'?'zh-CN':langs.includes((navigator.language||'').split('-')[0])?(navigator.language||'').split('-')[0]:'ko');})();
 function syncSavedLanguage(){try{const saved=localStorage.getItem('bokshot_lang');if(langs.includes(saved))lang=saved;}catch{}}
 const tr=()=>translations[lang];const langBtn=document.getElementById('lang');
-function applyLanguage(){syncSavedLanguage();let t=tr();document.documentElement.lang=lang;document.documentElement.dataset.lang=lang;updateLanguageChoices();langBtn.textContent=lang==='zh-CN'?'中':lang.toUpperCase();document.querySelector('.eyebrow').textContent=t.eyebrow;document.querySelector('.brand h1').textContent=t.name;document.querySelector('#overlay .overline').textContent=active?'HAPPY NEW YEAR! · 2027':t.over;document.getElementById('guideLink').textContent=t.guide;document.querySelector('#guideModal h2').textContent=t.guideTitle;document.getElementById('guideOk').textContent=t.guideOK;document.getElementById('shareCard').textContent=t.card;document.getElementById('shareLink').textContent=t.share;const gscene=document.querySelector('.guideScene');const guideTop=gscene?.querySelector('.guideSceneTitle');if(guideTop)guideTop.textContent=t.guideHow;const titles=[...document.querySelectorAll('.guideCard .guideItem strong')];if(titles.length)titles[0].textContent=t.guideAim;const gi=document.querySelectorAll('.guideItems .guideItem');if(gi.length===2){gi[0].querySelector('b').textContent=lang==='ko'?'화살':lang==='en'?'BOW':lang==='ja'?'弓':lang==='es'?'ARCO':lang==='fr'?'ARC':'弓箭';gi[1].querySelector('b').textContent=lang==='ko'?'폭탄':lang==='en'?'BOMB':lang==='ja'?'爆弾':lang==='es'?'BOMBA':lang==='fr'?'BOMBE':'炸弹';gi[0].querySelector('small').textContent=t.arrow;gi[1].querySelector('small').textContent=t.bomb;}for(const [idx,oldv] of ['화살을 쏘면 연사가 가능해요.','폭탄을 쏘면 광역공격이 발생해요.'].entries()){const leaf=[...document.querySelectorAll('#guideModal *')].find(n=>n.children.length===0&&n.textContent.trim()===oldv);if(leaf)leaf.textContent=idx?t.bomb:t.arrow;}if(active){/* preserve live gameplay */}else if(hits){renderResult();}else{document.getElementById('title').textContent=t.name;document.getElementById('desc').innerHTML=t.desc;document.getElementById('start').textContent=t.start;}}
+function applyLanguage(){syncSavedLanguage();const cue=document.getElementById('postcardEditCue');if(cue)cue.textContent=({ko:'✎ 눌러서 직접 작성 · 수정',en:'✎ Tap to write your wish',ja:'✎ タップしてメッセージを書く',fr:'✎ Touchez pour écrire',es:'✎ Toca para escribir','zh-CN':'✎ 点击编辑祝福语'})[lang]||'✎ Tap to edit';let t=tr();document.documentElement.lang=lang;document.documentElement.dataset.lang=lang;updateLanguageChoices();langBtn.textContent=lang==='zh-CN'?'中':lang.toUpperCase();document.querySelector('.eyebrow').textContent=t.eyebrow;document.querySelector('.brand h1').textContent=t.name;document.querySelector('#overlay .overline').textContent=active?'HAPPY NEW YEAR! · 2027':t.over;document.getElementById('guideLink').textContent=t.guide;document.querySelector('#guideModal h2').textContent=t.guideTitle;document.getElementById('guideOk').textContent=t.guideOK;document.getElementById('shareCard').textContent=t.card;document.getElementById('shareLink').textContent=t.share;const gscene=document.querySelector('.guideScene');const guideTop=gscene?.querySelector('.guideSceneTitle');if(guideTop)guideTop.textContent=t.guideHow;const titles=[...document.querySelectorAll('.guideCard .guideItem strong')];if(titles.length)titles[0].textContent=t.guideAim;const gi=document.querySelectorAll('.guideItems .guideItem');if(gi.length===2){gi[0].querySelector('b').textContent=lang==='ko'?'화살':lang==='en'?'BOW':lang==='ja'?'弓':lang==='es'?'ARCO':lang==='fr'?'ARC':'弓箭';gi[1].querySelector('b').textContent=lang==='ko'?'폭탄':lang==='en'?'BOMB':lang==='ja'?'爆弾':lang==='es'?'BOMBA':lang==='fr'?'BOMBE':'炸弹';gi[0].querySelector('small').textContent=t.arrow;gi[1].querySelector('small').textContent=t.bomb;}for(const [idx,oldv] of ['화살을 쏘면 연사가 가능해요.','폭탄을 쏘면 광역공격이 발생해요.'].entries()){const leaf=[...document.querySelectorAll('#guideModal *')].find(n=>n.children.length===0&&n.textContent.trim()===oldv);if(leaf)leaf.textContent=idx?t.bomb:t.arrow;}if(active){/* preserve live gameplay */}else if(hits){renderResult();}else{document.getElementById('title').textContent=t.name;document.getElementById('desc').innerHTML=t.desc;document.getElementById('start').textContent=t.start;}}
 const languageModal=document.getElementById('languageModal');
 const languageGrid=document.getElementById('languageGrid');
 const languageNames=[['ko','한국어','Korean'],['en','English','영어'],['ja','日本語','일본어'],['es','Español','스페인어'],['fr','Français','프랑스어'],['zh-CN','简体中文','중국어']];
@@ -423,9 +448,9 @@ function drawSunrise(){
  if(rise>.08){c.fillStyle=`rgba(255,224,164,${Math.min(.35,rise*.42)})`;c.fillRect(0,zone-37,W,2);}
 }
 let displayedScore=0;function hudUpdate(){hud.textContent=`✨ ${displayedScore}　⏳ ${Math.ceil(time)}s${machine>0?`　🏹${machine.toFixed(1)}`:""}`;}
-function start(){applyLanguage();overlay.classList.remove("result-balanced");audioReady();if(bgm){bgm.pause();bgm.currentTime=0;if(soundOn)bgm.play().catch(()=>{});} active=true;score=0;displayedScore=0;time=60;clock=0;lastNormalFire=-999;aim={x:0,z:70,y:180};targets=[];shots=[];gifts=[];particles=[];counts={};hits=0;items=[];machine=0;burst=0;itemTimer=0;shake=0;collectPulse=0;collectSparks=[];announcement=null;for(let i=0;i<6;i++)targets.push(newTarget(true));overlay.style.display='none';document.querySelector('#overlay .overline').textContent=tr().over;document.getElementById('shareActions').hidden=true;document.getElementById('shareNote').hidden=true;hudUpdate();}
+function start(){document.getElementById('stage').style.touchAction='none';applyLanguage();overlay.classList.remove("result-balanced");audioReady();if(bgm){bgm.pause();bgm.currentTime=0;if(soundOn)bgm.play().catch(()=>{});} active=true;score=0;displayedScore=0;time=5;clock=0;lastNormalFire=-999;aim={x:0,z:70,y:180};targets=[];shots=[];gifts=[];particles=[];counts={};hits=0;items=[];machine=0;burst=0;itemTimer=0;shake=0;collectPulse=0;collectSparks=[];announcement=null;for(let i=0;i<6;i++)targets.push(newTarget(true));overlay.style.display='none';document.querySelector('#overlay .overline').textContent=tr().over;document.getElementById('shareActions').hidden=true;document.getElementById('shareNote').hidden=true;hudUpdate();}
 function renderResult(){syncSavedLanguage();const t=tr();document.getElementById('title').textContent='🌟 '+score+t.result;document.querySelector('#overlay .overline').textContent='HAPPY NEW YEAR! · 2027';document.getElementById('desc').innerHTML=t.changed.replace(/^/,`<b>${hits}</b> `)+'<br>'+Object.entries(counts).map(([k,v])=>{let i=kinds.findIndex(q=>q.good===k);return (i>=0?t.good[i]:k)+' '+v}).join(' · ')+'<br><br>'+t.wish;document.getElementById('start').textContent=t.again;document.getElementById('shareActions').hidden=false;}
-function finish(){applyLanguage();overlay.classList.add('result-balanced');if(bgm)bgm.pause();sfx('end');voiceCall('Happy New Year!',true);active=false;drag=false;displayedScore=score;hudUpdate();overlay.style.display='flex';renderResult();}
+function finish(){document.getElementById('stage').style.touchAction='auto';applyLanguage();overlay.classList.add('result-balanced');if(bgm)bgm.pause();sfx('end');voiceCall('Happy New Year!',true);active=false;drag=false;displayedScore=score;hudUpdate();overlay.style.display='flex';renderResult();}
 
 let lastNormalFire=-999;const NORMAL_COOLDOWN=.45;function fire(){if(active&&clock-lastNormalFire>=NORMAL_COOLDOWN){lastNormalFire=clock;sfx('shoot');shots.push({x:aim.x,z:aim.z,y:aim.y,age:0,duration:.95,done:false,best:null});}}
 function hit(o,base,pt){const mult=o.z<53?1:o.z<81?1.5:2,points=Math.round(base*mult),power=base===250?3:base===120?2:1,colors=['','#a9f49b','#79d8ff','#ffd45b'];score+=points;hits++;sfx(power===3?'excellent':power===2?'good':'nice');if(!machine)gradeVoice(power===3?'excellent':power===2?'good':'nice');counts[o.k.good]=(counts[o.k.good]||0)+1;hudUpdate();announcement={text:power===3?'EXCELLENT!':power===2?'GOOD!':'NICE!',sub:`+${points}  ${tr().good[kinds.indexOf(o.k)]||o.k.good}`,color:colors[power],age:0,power};shake=power===3?11:power===2?5:2;gifts.push({x:pt.x,y:pt.y,age:0,power,icon:o.k.icon,good:o.k.good,points,credited:false});for(let i=0;i<power*18;i++){const a=rand(0,TAU),v=rand(40,130)*(.5+power*.23);particles.push({x:pt.x,y:pt.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-25,age:0,life:rand(.5,1.3),power});}targets.splice(targets.indexOf(o),1);targets.push(newTarget(false));}
@@ -539,17 +564,69 @@ if(announcement){const a=announcement,u=a.age,fade=cl((1.25-u)*3,0,1),pop=1+.35*
 function pos(e){const r=stage.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};}
 function move(e){if(!drag||e.pointerId!==pid)return;const p=pos(e);aim.x=cl((p.x-180)*1.72,-255,255);const t=cl((H-p.y)/(H-zone),0,1);aim.z=cl(42+t*65,42,107);aim.y=cl((zone-100)-t*(zone-142),42,zone-100);}
 stage.addEventListener('pointerdown',e=>{if(!active||drag)return;const p=pos(e);if(p.y<zone)return;e.preventDefault();drag=true;pid=e.pointerId;try{stage.setPointerCapture(pid);}catch{}move(e);},{passive:false});stage.addEventListener('pointermove',e=>{if(drag)e.preventDefault();move(e);},{passive:false});stage.addEventListener('pointerup',e=>{if(!drag||e.pointerId!==pid)return;e.preventDefault();move(e);drag=false;pid=null;if(machine<=0)fire();},{passive:false});stage.addEventListener('pointercancel',()=>{drag=false;pid=null;});document.getElementById('sound').onclick=e=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?'♫':'♪';e.currentTarget.setAttribute('aria-label',soundOn?'소리 켜짐':'소리 꺼짐');if(soundOn){audioReady();if(bgm&&active)bgm.play().catch(()=>{});}else if(bgm)bgm.pause();};const startBtn=document.getElementById('start');
-function makeCard(customMessage){const out=document.createElement('canvas');out.width=900;out.height=1200;const x=out.getContext('2d'),t=tr();const bg=x.createLinearGradient(0,0,0,1200);bg.addColorStop(0,'#152742');bg.addColorStop(.58,'#51445f');bg.addColorStop(1,'#d3a07c');x.fillStyle=bg;x.fillRect(0,0,900,1200);x.textAlign='center';x.fillStyle='#e9ca90';x.font='bold 28px sans-serif';x.fillText('2026 → 2027',450,165);x.font='bold 64px sans-serif';x.fillStyle='#ffe2a8';x.fillText(t.name,450,280);x.font='90px sans-serif';x.fillText('✈ ✦ 🍀',450,420);x.font='bold 88px sans-serif';x.fillText(score.toLocaleString()+' '+t.score,450,600);x.font='bold 32px sans-serif';x.fillStyle='#fff3dc';x.fillText(hits+' '+t.changed,450,690);x.font='26px sans-serif';x.fillText('HAPPY NEW YEAR! · 2027',450,805);x.font='bold 28px sans-serif';x.fillText('LUCKY SHOT',450,920);
-if(customMessage){x.fillStyle='#fff4df';x.font='bold 31px sans-serif';const lines=[];let line='';for(const ch of [...customMessage]){if(ch==='\n'){lines.push(line);line='';continue;}if(x.measureText(line+ch).width>745){lines.push(line);line=ch;}else line+=ch;}if(line)lines.push(line);const shown=lines.slice(0,3);shown.forEach((ln,i)=>x.fillText(ln,450,995+i*45));}
-x.font='22px sans-serif';x.fillStyle='#f8e0bb';const site='youkmoti.github.io/saehae-bokshot/';x.fillText(site,450,1150);return out;}
+function makeCard(customMessage,previewOnly=false){
+ const out=document.createElement('canvas');out.width=900;out.height=1200;
+ const x=out.getContext('2d'),t=tr();
+ const bg=x.createLinearGradient(0,0,0,1200);bg.addColorStop(0,'#152742');bg.addColorStop(.58,'#51445f');bg.addColorStop(1,'#d3a07c');
+ x.fillStyle=bg;x.fillRect(0,0,900,1200);
+ // v58: richly decorated gold-foil New Year postcard, same navy/rose/gold palette
+ x.save();
+ const foil=x.createLinearGradient(0,0,900,1200);foil.addColorStop(0,'#f9df9b');foil.addColorStop(.45,'#b88644');foil.addColorStop(.72,'#fff0b8');foil.addColorStop(1,'#b47c39');
+ x.strokeStyle=foil;x.lineWidth=12;x.strokeRect(27,27,846,1146);
+ x.lineWidth=3;x.strokeRect(42,42,816,1116);
+ x.globalAlpha=1;
+ function star(cx,cy,r){x.beginPath();for(let j=0;j<8;j++){const a=j*Math.PI/4-Math.PI/2,rr=j%2?r*.33:r;x.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr);}x.closePath();x.fill();}
+ x.fillStyle='#f5d78c';[[95,150,14],[810,170,19],[114,415,12],[798,428,14],[92,1065,17],[802,1003,15],[175,962,8],[735,910,9]].forEach(v=>star(...v));
+ // Two small lucky pouches at the top corners; no corner vines.
+ function pouch(px,py){
+  x.save();x.translate(px,py);x.shadowColor='#3b203b88';x.shadowBlur=10;
+  x.fillStyle='#a93d4d';x.strokeStyle='#ffe3a0';x.lineWidth=4;
+  x.beginPath();x.moveTo(-18,-20);x.quadraticCurveTo(-36,0,-34,29);x.quadraticCurveTo(-30,57,0,60);x.quadraticCurveTo(30,57,34,29);x.quadraticCurveTo(36,0,18,-20);x.closePath();x.fill();x.stroke();
+  x.shadowBlur=0;x.fillStyle='#e8b765';x.fillRect(-22,-27,44,12);
+  x.strokeStyle='#f8d995';x.lineWidth=4;x.beginPath();x.moveTo(-22,-12);x.quadraticCurveTo(0,-1,22,-12);x.stroke();
+  x.fillStyle='#ffebad';x.font='bold 28px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('福',0,25);
+  x.restore();
+ }
+ pouch(110,185);pouch(790,185);
+ // cream vellum panel for the handwritten blessing
+ const paper=x.createLinearGradient(0,645,0,987);paper.addColorStop(0,'#fff1cb');paper.addColorStop(1,'#e6c68f');
+ x.fillStyle=paper;x.beginPath();x.roundRect(57,653,786,331,24);x.fill();
+ x.strokeStyle='#b18446';x.lineWidth=4;x.stroke();
+ x.strokeStyle='#d2ad6d';x.lineWidth=2;x.beginPath();x.roundRect(70,666,760,305,17);x.stroke();
+ x.fillStyle='#9b743c';x.font='bold 24px sans-serif';x.textAlign='center';x.fillText('✦  NEW YEAR WISHES  ✦',450,701);
+ x.restore();x.textAlign='center';x.textBaseline='middle';
+ x.fillStyle='#e9ca90';x.font='bold 28px sans-serif';x.fillText('2026 → 2027',450,116);
+ x.font='bold 66px sans-serif';x.fillStyle='#ffe2a8';x.fillText(t.name,450,216,800);
+ x.font='90px sans-serif';x.fillText('✈ ✦ 🍀',450,345);
+ // Keep the score large, but fit long translated score labels within the card.
+ let scoreFont=112;const scoreText=score.toLocaleString()+' '+t.score;
+ do{x.font='900 '+scoreFont+'px sans-serif';if(x.measureText(scoreText).width<=795)break;scoreFont-=3;}while(scoreFont>62);
+ x.fillStyle='#ffe2a8';x.fillText(scoreText,450,506,800);
+ x.fillStyle='#fff3dc';x.font='bold 37px sans-serif';x.fillText(hits+' '+t.changed,450,596,800);
+ // Prominent greeting panel with adaptive multiline text.
+ const msg=(customMessage||'').trim();
+ if(msg&&!previewOnly){
+  // Golden parchment panel already painted in postcard background.
+  let font=76,lines=[];
+  const wrap=(size)=>{x.font='bold '+size+'px sans-serif';const result=[];for(const para of msg.split('\n')){let line='';for(const ch of [...para]){if(x.measureText(line+ch).width>695&&line){result.push(line);line=ch;}else line+=ch;}result.push(line);}return result;};
+  while(font>37){lines=wrap(font);if(lines.length<=3)break;font-=2;}
+  lines=lines.slice(0,5);x.font='bold '+font+'px sans-serif';x.fillStyle='#493b3a';
+  const lineH=font*1.46,firstY=821-(lines.length-1)*lineH/2;
+  lines.forEach((ln,i)=>x.fillText(ln,450,firstY+i*lineH,695));
+ }
+ x.font='24px sans-serif';x.fillStyle='#f8e0bb';x.fillText('HAPPY NEW YEAR! · 2027',450,1026);
+ x.font='bold 26px sans-serif';x.fillText('LUCKY SHOT',450,1074);
+ x.font='21px sans-serif';x.fillText('youkmoti.github.io/saehae-bokshot/',450,1150,810);
+ return out;
+}
 function notice(s){const n=document.getElementById('shareNote');n.hidden=false;n.textContent=s;}
 const giftModal=document.getElementById('giftModal'),giftMessage=document.getElementById('giftMessage'),giftPreview=document.getElementById('giftPreview'),giftStatus=document.getElementById('giftStatus');
 const giftPresets={ko:['올해의 걱정은 제가 날려 보낼게요.\n2027년에는 좋은 일만 가득하길! 🍀','새해에는 행운과 웃음이 가득하길!\n당신에게 이 복을 선물해요. ✨','새해 복 많이 받아! 💛'],en:['May your worries fly away.\nWishing you joy and luck in 2027! 🍀','Sending you a little luck for the new year! ✨','Happy New Year! 💛'],fr:['Que tes soucis s’envolent.\nBonheur et chance pour 2027 ! 🍀','Je t’envoie un peu de chance ! ✨','Bonne année ! 💛'],es:['Que tus preocupaciones se alejen.\n¡Suerte y alegría en 2027! 🍀','¡Te regalo un poco de suerte! ✨','¡Feliz Año Nuevo! 💛'],ja:['心配ごとが飛んでいきますように。\n2027年も幸せいっぱいに！🍀','新年の幸運を贈ります！✨','あけましておめでとう！💛'],'zh-CN':['愿烦恼随风飞走。\n祝你2027年好运连连！🍀','送你一份新年的好运！✨','新年快乐！💛']};
 const giftUI={ko:['🎁 복 카드 선물하기','친구에게 전할 새해 인사를 골라보세요. 직접 바꿔도 좋아요.','🍀 따뜻한 응원','✨ 행운 선물','💛 짧은 인사','이미지 저장','친구에게 보내기 ↗'],en:['🎁 Gift a lucky card','Choose a greeting or write your own.','🍀 Warm wishes','✨ Good luck','💛 Short note','Save image','Share card ↗'],fr:['🎁 Carte porte-bonheur','Choisissez ou écrivez un message.','🍀 Vœux chaleureux','✨ Bonne chance','💛 Message court','Enregistrer','Partager ↗'],es:['🎁 Tarjeta de suerte','Elige o escribe un mensaje.','🍀 Buenos deseos','✨ Buena suerte','💛 Mensaje corto','Guardar imagen','Compartir ↗'],ja:['🎁 福カードを贈る','メッセージを選ぶか入力してください。','🍀 応援','✨ 幸運','💛 短い挨拶','画像を保存','共有する ↗'],'zh-CN':['🎁 赠送福卡','选择或输入新年祝福。','🍀 温暖祝福','✨ 好运','💛 简短问候','保存图片','分享 ↗']};
-function previewGift(){const cv=makeCard(giftMessage.value);giftPreview.getContext('2d').drawImage(cv,0,0);document.getElementById('giftCount').textContent=[...giftMessage.value].length+' / 90';}
+function previewGift(){const cv=makeCard(giftMessage.value,true);giftPreview.getContext('2d').drawImage(cv,0,0);document.getElementById('giftCount').textContent=[...giftMessage.value].length+' / 90';}
 function chooseGift(i){giftMessage.value=(giftPresets[lang]||giftPresets.ko)[i];document.querySelectorAll('#giftPresets button').forEach((b,n)=>b.classList.toggle('chosen',n===i));previewGift();}
-function openGift(){const labels=giftUI[lang]||giftUI.ko;document.getElementById('giftTitle').textContent=labels[0];document.getElementById('giftHint').textContent=labels[1];document.querySelectorAll('#giftPresets button').forEach((b,i)=>b.textContent=labels[i+2]);document.getElementById('giftSave').textContent=labels[5];document.getElementById('giftSend').textContent=labels[6];giftStatus.textContent='';chooseGift(0);giftModal.classList.add('open');}
-function closeGift(){giftModal.classList.remove('open');}
+function openGift(){document.getElementById('stage').style.touchAction='auto';const labels=giftUI[lang]||giftUI.ko;document.getElementById('giftTitle').textContent=labels[0];document.getElementById('giftHint').textContent=labels[1];document.querySelectorAll('#giftPresets button').forEach((b,i)=>b.textContent=labels[i+2]);document.getElementById('giftSave').textContent=labels[5];document.getElementById('giftSend').textContent=labels[6];giftStatus.textContent='';chooseGift(0);giftModal.classList.add('open');giftModal.querySelector('.giftPanel').scrollTop=0;}
+function closeGift(){giftModal.classList.remove('open');document.getElementById('stage').style.touchAction=active?'none':'auto';}
 document.getElementById('shareCard').addEventListener('click',openGift);
 document.getElementById('giftClose').addEventListener('click',closeGift);
 giftModal.addEventListener('click',e=>{if(e.target===giftModal)closeGift();});
